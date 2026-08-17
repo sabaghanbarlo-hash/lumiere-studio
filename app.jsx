@@ -82,17 +82,17 @@ const GALLERY_ITEMS = [
 
 const TESTIMONIALS = [
   {
-    quote: "I've had colour done all over Paris and this was different — the stylist actually listened before touching my hair. My balayage has never grown out this well.",
+    quote: "I came in for balayage and couldn't believe how natural the result looked. The consultation beforehand made such a difference.",
     name: "Élise",
-    detail: "Client since 2022",
+    detail: "Balayage",
   },
   {
-    quote: "The consultation alone was worth the visit. They didn't just ask what I wanted, they asked why — and gently talked me out of a cut that wouldn't have suited me.",
+    quote: "The haircut is exactly what I wanted. Beautiful attention to detail, and the studio itself is incredibly calm.",
     name: "Nora",
     detail: "Signature Haircut",
   },
   {
-    quote: "No phones ringing, no rushing, just quiet and good coffee. I left with a great haircut and an hour to myself I didn't know I needed.",
+    quote: "I finally found a salon that listens before reaching for the scissors. I'll definitely be back.",
     name: "Salomé",
     detail: "Blow Dry & Treatment",
   },
@@ -324,26 +324,63 @@ function Intro() {
     <section className="section intro">
       <div className="container intro-grid">
         <Reveal as="div" className="intro-heading">
-          <Eyebrow>Our Approach</Eyebrow>
+          <Eyebrow>Our Philosophy</Eyebrow>
           <h2>
-            Where confidence <br className="lg-only" />
-            meets craftsmanship.
+            Beauty, designed <br className="lg-only" />
+            around you.
           </h2>
         </Reveal>
         <Reveal as="div" className="intro-copy" delay={80}>
           <p>
-            LUMIÈRE was built on a simple idea: beauty should feel effortless, not performed.
-            Every visit begins with an unhurried conversation — about your hair's history, your
-            daily rhythm, the version of yourself you're growing into — before a single tool is
-            picked up.
-          </p>
-          <p>
-            Our stylists and colourists trained across some of Paris's most respected maisons,
-            and they bring that precision here, tempered by a calmer, more personal pace. We
-            don't chase trends. We study your features, your texture, your life, and build
-            outward from there.
+            Every appointment begins with a thoughtful consultation. We combine modern
+            techniques, personalized advice, and meticulous craftsmanship to create results
+            that feel distinctly yours.
           </p>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  WHY LUMIÈRE                                                        */
+/* ------------------------------------------------------------------ */
+
+const PRINCIPLES = [
+  {
+    n: "01",
+    title: "Personalized",
+    text: "Every appointment begins with a consultation tailored to your features, lifestyle, and goals.",
+  },
+  {
+    n: "02",
+    title: "Crafted",
+    text: "Modern techniques and considered details come together to create effortless, lasting results.",
+  },
+  {
+    n: "03",
+    title: "Calm",
+    text: "A quieter studio experience designed to give you time to relax, reset, and feel your best.",
+  },
+];
+
+function WhyLumiere() {
+  return (
+    <section className="section why">
+      <div className="container">
+        <Reveal as="div" className="section-heading center">
+          <Eyebrow>Our Studio</Eyebrow>
+          <h2>Why LUMIÈRE?</h2>
+        </Reveal>
+        <div className="principles-grid">
+          {PRINCIPLES.map((p, i) => (
+            <Reveal as="div" className="principle" key={p.n} delay={i * 90}>
+              <span className="principle-number">{p.n}</span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -353,7 +390,7 @@ function Intro() {
 /*  SERVICES                                                            */
 /* ------------------------------------------------------------------ */
 
-function ServiceRow({ item }) {
+function ServiceRow({ item, onBook }) {
   return (
     <li className="service-row">
       <div className="service-row-top">
@@ -362,6 +399,14 @@ function ServiceRow({ item }) {
         <span className="service-price">{item.price}</span>
       </div>
       <p className="service-desc">{item.desc}</p>
+      <button
+        type="button"
+        className="service-book-link"
+        onClick={() => onBook(item.name)}
+      >
+        Book This Service
+        <span className="chevron" aria-hidden="true" />
+      </button>
     </li>
   );
 }
@@ -374,7 +419,11 @@ function Services({ onBook }) {
       <div className="container">
         <Reveal as="div" className="section-heading">
           <Eyebrow>Services</Eyebrow>
-          <h2>Considered, not rushed.</h2>
+          <h2>Services</h2>
+          <p className="section-lede">
+            Thoughtfully tailored treatments, from everyday essentials to complete
+            transformations.
+          </p>
         </Reveal>
 
         <div className="services-grid">
@@ -382,12 +431,12 @@ function Services({ onBook }) {
             <h3 className="service-col-title">Hair</h3>
             <ul>
               {HAIR_SERVICES.map((s) => (
-                <ServiceRow key={s.name} item={s} />
+                <ServiceRow key={s.name} item={s} onBook={onBook} />
               ))}
               <div className={`service-more ${showMore ? "is-open" : ""}`}>
                 <ul>
                   {HAIR_SERVICES_MORE.map((s) => (
-                    <ServiceRow key={s.name} item={s} />
+                    <ServiceRow key={s.name} item={s} onBook={onBook} />
                   ))}
                 </ul>
               </div>
@@ -398,12 +447,12 @@ function Services({ onBook }) {
             <h3 className="service-col-title">Beauty</h3>
             <ul>
               {BEAUTY_SERVICES.map((s) => (
-                <ServiceRow key={s.name} item={s} />
+                <ServiceRow key={s.name} item={s} onBook={onBook} />
               ))}
               <div className={`service-more ${showMore ? "is-open" : ""}`}>
                 <ul>
                   {BEAUTY_SERVICES_MORE.map((s) => (
-                    <ServiceRow key={s.name} item={s} />
+                    <ServiceRow key={s.name} item={s} onBook={onBook} />
                   ))}
                 </ul>
               </div>
@@ -452,14 +501,16 @@ function Featured({ onBook }) {
           <dl className="featured-meta">
             <div>
               <dt>Duration</dt>
-              <dd>90 minutes</dd>
+              <dd>~75 minutes</dd>
             </div>
             <div>
-              <dt>From</dt>
-              <dd>€120</dd>
+              <dt>Price</dt>
+              <dd>€95</dd>
             </div>
           </dl>
-          <PrimaryButton onClick={onBook}>Reserve the Signature</PrimaryButton>
+          <PrimaryButton onClick={() => onBook("The Lumière Signature")}>
+            Book The Lumière Signature
+          </PrimaryButton>
         </Reveal>
       </div>
     </section>
@@ -566,7 +617,7 @@ function Testimonials() {
       <div className="container">
         <Reveal as="div" className="section-heading center">
           <Eyebrow>In Their Words</Eyebrow>
-          <h2>What clients notice first.</h2>
+          <h2>Kind words.</h2>
         </Reveal>
         <div className="testimonial-grid">
           {TESTIMONIALS.map((t, i) => (
@@ -581,6 +632,47 @@ function Testimonials() {
               </footer>
             </Reveal>
           ))}
+        </div>
+        <p className="testimonial-disclaimer">
+          Client experiences shown are illustrative, created for portfolio demonstration
+          purposes.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  SOCIAL / INSTAGRAM                                                  */
+/* ------------------------------------------------------------------ */
+
+const INSTAGRAM_IMAGES = [
+  "https://images.unsplash.com/photo-1700760934268-8aa0ef52ce0a?auto=format&fit=crop&w=500&q=80",
+  "https://images.unsplash.com/photo-1746723375184-5f537d2e6f31?auto=format&fit=crop&w=500&q=80",
+  "https://images.unsplash.com/photo-1731514771613-991a02407132?auto=format&fit=crop&w=500&q=80",
+  "https://images.unsplash.com/photo-1712213396688-c6f2d536671f?auto=format&fit=crop&w=500&q=80",
+];
+
+function InstagramSection() {
+  return (
+    <section className="section instagram">
+      <div className="container">
+        <Reveal as="div" className="section-heading center">
+          <Eyebrow>@lumierestudio</Eyebrow>
+          <h2>Follow the studio.</h2>
+        </Reveal>
+        <div className="instagram-row">
+          {INSTAGRAM_IMAGES.map((src, i) => (
+            <Reveal as="div" className="instagram-tile" key={src} delay={i * 60}>
+              <img src={src} alt="A preview image from the LUMIÈRE Studio Instagram feed" loading="lazy" />
+            </Reveal>
+          ))}
+        </div>
+        <div className="instagram-footer">
+          <SecondaryButton href="https://www.instagram.com/" target="_blank" rel="noreferrer">
+            Follow on Instagram
+          </SecondaryButton>
+          <p className="instagram-note">Demo preview — not a live, connected account.</p>
         </div>
       </div>
     </section>
@@ -601,7 +693,10 @@ function BookingCta({ onBook }) {
             starts here.
           </h2>
           <p>Tell us what you're looking for and we'll help you find the right service.</p>
-          <PrimaryButton onClick={onBook}>Book an Appointment</PrimaryButton>
+          <div className="booking-cta-actions">
+            <PrimaryButton onClick={() => onBook()}>Book an Appointment</PrimaryButton>
+            <SecondaryButton href="#contact">Contact the Studio</SecondaryButton>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -641,44 +736,175 @@ function MapVisual() {
   );
 }
 
-function Contact() {
+function ContactForm() {
+  const [form, setForm] = useState({ name: "", email: "", service: "", message: "" });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const update = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const validate = () => {
+    const next = {};
+    if (!form.name.trim()) next.name = "Please enter your name.";
+    if (!form.email.trim()) next.email = "Please enter your email.";
+    else if (!EMAIL_RE.test(form.email.trim())) next.email = "Please enter a valid email address.";
+    if (!form.message.trim()) next.message = "Please add a short message.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="contact-form-success">
+        <p className="eyebrow">Message Sent</p>
+        <h3>Thank you.</h3>
+        <p>Thank you. Your message has been received in this demo.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      <div className="form-row">
+        <label htmlFor="cf-name">Name</label>
+        <input
+          id="cf-name"
+          value={form.name}
+          onChange={update("name")}
+          aria-invalid={!!errors.name}
+          aria-describedby={errors.name ? "cf-name-error" : undefined}
+        />
+        {errors.name && (
+          <span id="cf-name-error" className="form-error" role="alert">
+            {errors.name}
+          </span>
+        )}
+      </div>
+      <div className="form-row">
+        <label htmlFor="cf-email">Email</label>
+        <input
+          id="cf-email"
+          type="email"
+          value={form.email}
+          onChange={update("email")}
+          aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? "cf-email-error" : undefined}
+        />
+        {errors.email && (
+          <span id="cf-email-error" className="form-error" role="alert">
+            {errors.email}
+          </span>
+        )}
+      </div>
+      <div className="form-row">
+        <label htmlFor="cf-service">Service (optional)</label>
+        <select id="cf-service" value={form.service} onChange={update("service")}>
+          <option value="">Not sure yet</option>
+          {ALL_SERVICE_NAMES.map((name) => (
+            <option key={name} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="form-row">
+        <label htmlFor="cf-message">Message</label>
+        <textarea
+          id="cf-message"
+          rows={4}
+          value={form.message}
+          onChange={update("message")}
+          aria-invalid={!!errors.message}
+          aria-describedby={errors.message ? "cf-message-error" : undefined}
+        />
+        {errors.message && (
+          <span id="cf-message-error" className="form-error" role="alert">
+            {errors.message}
+          </span>
+        )}
+      </div>
+      <PrimaryButton type="submit">Send Message</PrimaryButton>
+    </form>
+  );
+}
+
+function Contact({ onBook }) {
   return (
     <section id="contact" className="section contact">
-      <div className="container contact-grid">
-        <Reveal as="div" className="contact-info">
+      <div className="container">
+        <Reveal as="div" className="section-heading">
           <Eyebrow>Visit</Eyebrow>
           <h2>LUMIÈRE Studio</h2>
-          <address>
-            27 Rue du Bac
-            <br />
-            75007 Paris, France
-          </address>
-
-          <div className="contact-line">
-            <span>Phone</span>
-            <a href="tel:+33184000000">+33 1 84 00 00 00</a>
-          </div>
-          <div className="contact-line">
-            <span>Email</span>
-            <a href="mailto:hello@lumierestudio.example">hello@lumierestudio.example</a>
-          </div>
-
-          <h3 className="hours-title">Opening Hours</h3>
-          <ul className="hours-list">
-            {HOURS.map(([day, time]) => (
-              <li key={day}>
-                <span>{day}</span>
-                <span className="hours-time">{time}</span>
-              </li>
-            ))}
-          </ul>
         </Reveal>
 
-        <Reveal as="div" className="contact-map" delay={100}>
-          <MapVisual />
-        </Reveal>
+        <div className="contact-grid">
+          <Reveal as="div" className="contact-info">
+            <address>
+              27 Rue du Bac
+              <br />
+              75007 Paris, France
+            </address>
+
+            <div className="contact-line">
+              <span>Phone</span>
+              <a href="tel:+33184000000">+33 1 84 00 00 00</a>
+            </div>
+            <div className="contact-line">
+              <span>Email</span>
+              <a href="mailto:hello@lumierestudio.example">hello@lumierestudio.example</a>
+            </div>
+
+            <div className="contact-actions">
+              <SecondaryButton
+                href="https://www.google.com/maps/search/?api=1&query=27+Rue+du+Bac+75007+Paris+France"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Get Directions
+              </SecondaryButton>
+              <SecondaryButton href="mailto:hello@lumierestudio.example">Contact Us</SecondaryButton>
+            </div>
+
+            <h3 className="hours-title">Opening Hours</h3>
+            <ul className="hours-list">
+              {HOURS.map(([day, time]) => (
+                <li key={day}>
+                  <span>{day}</span>
+                  <span className="hours-time">{time}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal as="div" className="contact-map" delay={100}>
+            <MapVisual />
+          </Reveal>
+
+          <Reveal as="div" className="contact-form-wrap" delay={150}>
+            <h3>Send a message</h3>
+            <ContactForm />
+          </Reveal>
+        </div>
       </div>
     </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  MOBILE BOOK BAR                                                     */
+/* ------------------------------------------------------------------ */
+
+function MobileBookBar({ onBook }) {
+  return (
+    <div className="mobile-book-bar" role="complementary" aria-label="Book an appointment">
+      <PrimaryButton onClick={() => onBook()}>Book an Appointment</PrimaryButton>
+    </div>
   );
 }
 
@@ -760,20 +986,37 @@ function Footer() {
 /*  BOOKING MODAL                                                       */
 /* ------------------------------------------------------------------ */
 
-function BookingModal({ open, onClose }) {
+const TIME_SLOTS = [
+  "9:00", "9:30", "10:00", "10:30", "11:00", "11:30",
+  "12:00", "13:00", "13:30", "14:00", "14:30", "15:00",
+  "15:30", "16:00", "16:30", "17:00", "17:30", "18:00",
+];
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function BookingModal({ open, onClose, preselectedService }) {
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", service: "", date: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", service: "", date: "", time: "", message: "" });
+  const [errors, setErrors] = useState({});
   const dialogRef = useRef(null);
   const firstFieldRef = useRef(null);
 
   useEffect(() => {
     if (open) {
       setSubmitted(false);
-      setForm({ name: "", email: "", service: "", date: "", message: "" });
+      setErrors({});
+      setForm({
+        name: "",
+        email: "",
+        service: preselectedService || "",
+        date: "",
+        time: "",
+        message: "",
+      });
       const t = setTimeout(() => firstFieldRef.current?.focus(), 60);
       return () => clearTimeout(t);
     }
-  }, [open]);
+  }, [open, preselectedService]);
 
   const handleKey = useCallback(
     (e) => {
@@ -796,8 +1039,19 @@ function BookingModal({ open, onClose }) {
 
   const update = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
+  const validate = () => {
+    const next = {};
+    if (!form.service.trim()) next.service = "Please choose a service.";
+    if (!form.name.trim()) next.name = "Please enter your name.";
+    if (!form.email.trim()) next.email = "Please enter your email.";
+    else if (!EMAIL_RE.test(form.email.trim())) next.email = "Please enter a valid email address.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
     setSubmitted(true);
   };
 
@@ -818,40 +1072,23 @@ function BookingModal({ open, onClose }) {
           <div className="modal-success">
             <p className="eyebrow">Request Received</p>
             <h3>Thank you, {form.name.split(" ")[0] || "there"}.</h3>
-            <p>
-              We've received your request and will confirm your appointment by email within one
-              business day.
-            </p>
+            <p>Thank you. Your appointment request has been received in this demo.</p>
             <SecondaryButton onClick={onClose}>Close</SecondaryButton>
           </div>
         ) : (
           <>
             <p className="eyebrow">Book an Appointment</p>
             <h3 id="modal-title">Let's find your time.</h3>
-            <form className="booking-form" onSubmit={handleSubmit}>
-              <div className="form-row">
-                <label htmlFor="bf-name">Full name</label>
-                <input
-                  id="bf-name"
-                  ref={firstFieldRef}
-                  required
-                  value={form.name}
-                  onChange={update("name")}
-                />
-              </div>
-              <div className="form-row">
-                <label htmlFor="bf-email">Email</label>
-                <input
-                  id="bf-email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={update("email")}
-                />
-              </div>
+            <form className="booking-form" onSubmit={handleSubmit} noValidate>
               <div className="form-row">
                 <label htmlFor="bf-service">Service</label>
-                <select id="bf-service" required value={form.service} onChange={update("service")}>
+                <select
+                  id="bf-service"
+                  value={form.service}
+                  onChange={update("service")}
+                  aria-invalid={!!errors.service}
+                  aria-describedby={errors.service ? "bf-service-error" : undefined}
+                >
                   <option value="" disabled>
                     Choose a service
                   </option>
@@ -861,10 +1098,60 @@ function BookingModal({ open, onClose }) {
                     </option>
                   ))}
                 </select>
+                {errors.service && (
+                  <span id="bf-service-error" className="form-error" role="alert">
+                    {errors.service}
+                  </span>
+                )}
               </div>
               <div className="form-row">
-                <label htmlFor="bf-date">Preferred date</label>
-                <input id="bf-date" type="date" value={form.date} onChange={update("date")} />
+                <label htmlFor="bf-name">Full name</label>
+                <input
+                  id="bf-name"
+                  ref={firstFieldRef}
+                  value={form.name}
+                  onChange={update("name")}
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "bf-name-error" : undefined}
+                />
+                {errors.name && (
+                  <span id="bf-name-error" className="form-error" role="alert">
+                    {errors.name}
+                  </span>
+                )}
+              </div>
+              <div className="form-row">
+                <label htmlFor="bf-email">Email</label>
+                <input
+                  id="bf-email"
+                  type="email"
+                  value={form.email}
+                  onChange={update("email")}
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "bf-email-error" : undefined}
+                />
+                {errors.email && (
+                  <span id="bf-email-error" className="form-error" role="alert">
+                    {errors.email}
+                  </span>
+                )}
+              </div>
+              <div className="form-row form-row-split">
+                <div>
+                  <label htmlFor="bf-date">Preferred date</label>
+                  <input id="bf-date" type="date" value={form.date} onChange={update("date")} />
+                </div>
+                <div>
+                  <label htmlFor="bf-time">Preferred time</label>
+                  <select id="bf-time" value={form.time} onChange={update("time")}>
+                    <option value="">Any time</option>
+                    {TIME_SLOTS.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div className="form-row">
                 <label htmlFor="bf-message">Anything we should know?</label>
@@ -877,6 +1164,7 @@ function BookingModal({ open, onClose }) {
                 />
               </div>
               <PrimaryButton type="submit">Request Appointment</PrimaryButton>
+              <p className="form-demo-note">This is a portfolio demo — no real appointment will be booked.</p>
             </form>
           </>
         )}
@@ -1146,6 +1434,78 @@ const GlobalStyle = () => (
     .services-footer{
       margin-top: 56px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px;
     }
+    .section-lede{ color: var(--charcoal-soft); max-width: 480px; margin: -6px 0 0; }
+    .service-book-link{
+      margin-top:10px; background:none; border:none; cursor:pointer; padding:0;
+      font-family: var(--body); font-size:0.78rem; font-weight:700; letter-spacing:0.04em;
+      color: var(--gold); display:inline-flex; align-items:center; gap:7px;
+      text-transform:uppercase; opacity:0; transition: opacity 0.25s ease;
+    }
+    .service-row:hover .service-book-link, .service-row:focus-within .service-book-link{ opacity:1; }
+    @media (max-width: 720px){ .service-book-link{ opacity:1; } }
+    .service-book-link .chevron{ width:5px; height:5px; margin-top:-2px; }
+
+    /* ---------- Why LUMIÈRE ---------- */
+    .why{ background: var(--ivory-deep); }
+    .principles-grid{
+      display:grid; grid-template-columns:1fr; gap: 40px;
+      max-width: 980px; margin: 0 auto;
+    }
+    @media (min-width: 780px){
+      .principles-grid{ grid-template-columns: repeat(3, 1fr); gap: 56px; }
+    }
+    .principle{ text-align:center; padding: 0 12px; }
+    .principle-number{
+      display:block; font-family: var(--display); font-size:1rem; color: var(--gold);
+      margin-bottom: 16px; letter-spacing:0.08em;
+    }
+    .principle h3{ margin-bottom: 12px; }
+    .principle p{ font-size:0.92rem; max-width: 280px; margin: 0 auto; }
+
+    /* ---------- Instagram ---------- */
+    .instagram-row{
+      display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    }
+    @media (min-width: 700px){ .instagram-row{ grid-template-columns: repeat(4, 1fr); } }
+    .instagram-tile{ aspect-ratio: 1; overflow:hidden; border-radius: var(--radius); }
+    .instagram-tile img{
+      width:100%; height:100%; object-fit:cover; transition: transform 0.6s ease;
+    }
+    .instagram-tile:hover img{ transform: scale(1.05); }
+    .instagram-footer{ text-align:center; margin-top: 36px; }
+    .instagram-note{ font-size:0.76rem; color: var(--taupe); margin: 12px 0 0; }
+
+    .testimonial-disclaimer{
+      text-align:center; font-size:0.76rem; color: var(--taupe); margin: 36px 0 0;
+    }
+
+    .booking-cta-actions{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; }
+    .booking-cta .btn-secondary{ color: var(--ivory); border-color: rgba(247,242,234,0.4); }
+    .booking-cta .btn-secondary:hover{ border-color: var(--ivory); }
+
+    .form-row-split{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+    @media (max-width: 480px){ .form-row-split{ grid-template-columns: 1fr; } }
+    .form-error{ font-size:0.76rem; color:#A8433A; margin-top:2px; }
+    .form-demo-note{ font-size:0.76rem; color: var(--taupe); text-align:center; margin: 4px 0 0; }
+
+    .skip-link{
+      position:absolute; left:12px; top:-60px; background: var(--charcoal); color: var(--ivory);
+      padding: 12px 18px; border-radius: var(--radius); z-index: 200; font-size:0.85rem; font-weight:600;
+      transition: top 0.25s ease;
+    }
+    .skip-link:focus{ top:12px; }
+
+    .mobile-book-bar{
+      position: fixed; left:0; right:0; bottom:0; z-index: 50;
+      padding: 12px clamp(16px,5vw,32px);
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      background: rgba(247,242,234,0.94); backdrop-filter: blur(10px);
+      border-top: 1px solid var(--taupe-line);
+      display:none;
+    }
+    @media (max-width: 899px){ .mobile-book-bar{ display:block; } }
+    .mobile-book-bar .btn{ width:100%; }
+    @media (max-width: 899px){ .site-footer{ padding-bottom: 74px; } }
 
     /* ---------- Featured ---------- */
     .featured-grid{
@@ -1253,7 +1613,15 @@ const GlobalStyle = () => (
     .contact-grid{
       display:grid; grid-template-columns:1fr; gap: 48px;
     }
-    @media (min-width: 860px){ .contact-grid{ grid-template-columns: 0.9fr 1.1fr; gap: 90px; } }
+    @media (min-width: 860px){
+      .contact-grid{ grid-template-columns: 0.85fr 0.85fr 1.1fr; gap: 56px; align-items:start; }
+    }
+    .contact-actions{ display:flex; flex-wrap:wrap; gap:14px; margin: 22px 0 30px; }
+    .contact-actions .btn{ padding: 12px 22px; font-size:0.8rem; }
+    .contact-form-wrap h3{ margin-bottom:18px; }
+    .contact-form{ display:flex; flex-direction:column; gap:16px; }
+    .contact-form-success{ background: var(--white); border:1px solid var(--taupe-line); padding: 28px; border-radius: var(--radius); }
+    .contact-form-success h3{ margin-top:6px; }
     .contact-info address{ font-style:normal; font-family: var(--display); font-size:1.15rem; margin-bottom: 26px; color: var(--charcoal-soft); }
     .contact-line{ display:flex; gap:10px; font-size:0.94rem; margin-bottom:10px; }
     .contact-line span:first-child{ color: var(--taupe); min-width: 56px; }
@@ -1340,31 +1708,41 @@ const GlobalStyle = () => (
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [preselectedService, setPreselectedService] = useState("");
 
   useEffect(() => {
-    document.title = "LUMIÈRE Studio — Luxury Hair & Beauty in Paris";
+    document.title = "LUMIÈRE Studio | Luxury Hair & Beauty Studio in Paris";
   }, []);
 
-  const openModal = () => setModalOpen(true);
+  const openModal = (serviceName) => {
+    setPreselectedService(serviceName || "");
+    setModalOpen(true);
+  };
   const closeModal = () => setModalOpen(false);
 
   return (
     <div className="lumiere-app">
       <GlobalStyle />
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <Header onBook={openModal} />
-      <main>
+      <main id="main">
         <Hero onBook={openModal} />
         <Intro />
+        <WhyLumiere />
         <Services onBook={openModal} />
         <Featured onBook={openModal} />
         <About />
         <Gallery />
         <Testimonials />
+        <InstagramSection />
         <BookingCta onBook={openModal} />
-        <Contact />
+        <Contact onBook={openModal} />
       </main>
       <Footer />
-      <BookingModal open={modalOpen} onClose={closeModal} />
+      <BookingModal open={modalOpen} onClose={closeModal} preselectedService={preselectedService} />
+      <MobileBookBar onBook={openModal} />
     </div>
   );
 }
